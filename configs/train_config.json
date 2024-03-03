@@ -1,0 +1,36 @@
+{
+    "model": {
+        "model_name" : "beomi/polyglot-ko-12.8b-safetensors",
+        "device" : "cuda"
+    },
+    "bnb_config" : {
+        "4bit" : true,
+        "double_quant" : true,
+        "quant_type" : "nf4",
+        "compute_dtype" : "bfloat16"
+    },
+    "peft_config":{
+        "r" : 8,
+        "alpha" : 32,
+        "dropout" : 0.05,
+        "task_type" : "CAUSAL_LM",
+        "target_modules" : ["query_key_value"],
+        "bias" : "none"
+    },
+    "train_data_path" : "../datas/train_processed.csv",
+    "train_config":{
+        "batch" : 6,
+        "ga_steps" : 2,
+        "epochs" : 3,
+        "lr" : 2e-4,
+        "fp16" : true,
+        "logging_steps" : 10,
+        "output_dir" : "../models/beomi_polyglot_",
+        "optim" : "paged_adamw_32bit",
+        "save_steps" : 100,
+        "save_limit" : 3,
+        "run_name" : "polyglot_",
+        "seed" : 456
+    },
+    "WANDB_API_KEY" : "0a7cca3a906f5c34a06fe63623461725e2278ef3"
+}

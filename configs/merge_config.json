@@ -1,0 +1,6 @@
+{
+    "base_model": "beomi/polyglot-ko-12.8b-safetensors",
+    "peft_model": "beomi_pyglot_datasetdict/checkpoint-1500",
+    "save_merged_model": "beomi_polyglot_merged_cp1500"
+}
+

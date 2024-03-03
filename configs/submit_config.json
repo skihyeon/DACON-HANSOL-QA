@@ -1,0 +1,5 @@
+{
+    "answer_file_path" : "../results/infer_answers/gguf_polyglot_answers.csv",
+    "submit_file_path" : "../results/submits/gguf_polyglot_submits.csv",
+    "sample_submit_path" : "../datas/sample_submission.csv"
+}

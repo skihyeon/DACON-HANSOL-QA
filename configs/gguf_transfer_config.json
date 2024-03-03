@@ -1,0 +1,6 @@
+{
+    "model_path": "../model/",
+    "transfer_model_name" : "ggml-model-f16.gguf",
+    "quantize_option" : "q4_1",
+    "quantize_model_name" : "ggml-model-q4_1.gguf"
+}

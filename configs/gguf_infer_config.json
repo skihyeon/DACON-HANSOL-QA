@@ -1,0 +1,21 @@
+{
+    "model": {
+        "batch_size": 4096,
+        "context_length": 512,
+        "path": "../model/beomi_polyglot_merged_cp1500/ggml-model-q4_1.gguf"
+    },
+    "test_data": {
+        "file_path": "../datas/test.csv"
+    },
+    "output": {
+        "result_file_path": "../results/infer_answers/gguf_polyglot_answers.csv"
+    },
+    "generation": {
+        "max_tokens": 256,
+        "stop_token": "<endoftext|>",
+        "echo": false,
+        "top_k": 1,
+        "repeat_penalty": 1.2,
+        "temperature": 0.9
+    }
+}
