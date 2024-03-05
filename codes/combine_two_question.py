@@ -10,14 +10,14 @@ def clean_category(text):
 def combine_questions(data):
     combined_data = data.copy()
     connectors = [" 그리고 ", " 또한, "]
-    for i in range(len(data)):
-        item = data[i]
+    sample_size = len(data) // 3
+    for _ in range(sample_size):
+        item, sample_2 = random.sample(data, 2)
         input_text = clean_category(item['input'])
-        _, sample_2 = random.sample(data, 2)
         input_text_2 = clean_category(sample_2['input'])
         input_text_2 = input_text_2.replace("질문: ", "", 1)
         combined_input = input_text + random.choice(connectors) + input_text_2
-        combined_output = f"{item['output']} {sample_2['output']}"
+        combined_output = f"{item['output']} \n {sample_2['output']}"
         combined_data.append({"input": combined_input, "output": combined_output})
     return combined_data
 
