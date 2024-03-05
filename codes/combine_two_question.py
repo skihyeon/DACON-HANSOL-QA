@@ -1,34 +1,48 @@
 import random
 import json
+import pandas as pd
 
+train_file_path = '../datas/train_processed.csv'
 
-def clean_category(text):
-    if "카테고리: " in text and " 질문: " in text:
-        return "질문: " + text.split(" 질문: ", 1)[1]
-    return text
+def load_train_data(file_path):
+    return pd.read_csv(file_path)
 
-def combine_questions(data):
-    combined_data = data.copy()
-    connectors = [" 그리고 ", " 또한, "]
-    sample_size = len(data) // 3
+def format_data_with_instruction(data, instruction):
+    formatted_data = []
+    for _, row in data.iterrows():
+        valid_answers = [row[f'답변_{i}'] for i in range(1, 6) if pd.notna(row[f'답변_{i}'])]
+        for answer in valid_answers:
+            for i in [1, 2]:
+                question_key = f'질문_{i}'
+                if pd.notna(row[question_key]):
+                    formatted_data.append({
+                        "instruction": instruction,
+                        "question": row[question_key],
+                        "answer": answer
+                    })
+    return formatted_data
+
+def combine_questions(data, instruction, connectors=[" 그리고 ", " 또한, "], sample_fraction=1/3):
+    combined_data = []
+    sample_size = int(len(data) * sample_fraction)
     for _ in range(sample_size):
-        item, sample_2 = random.sample(data, 2)
-        input_text = clean_category(item['input'])
-        input_text_2 = clean_category(sample_2['input'])
-        input_text_2 = input_text_2.replace("질문: ", "", 1)
-        combined_input = input_text + random.choice(connectors) + input_text_2
-        combined_output = f"{item['output']} \n {sample_2['output']}"
-        combined_data.append({"input": combined_input, "output": combined_output})
+        item1, item2 = random.sample(data, 2)
+        connector = random.choice(connectors)
+        combined_question = f"{item1['question']}{connector}{item2['question']}"
+        combined_answer = f"{item1['answer']} \n {item2['answer']}"
+        combined_data.append({"instruction": instruction, "question": combined_question, "answer": combined_answer})
     return combined_data
 
-data_list = []
-with open('../datas/alpaca_formatted_train_data.jsonl', 'r', encoding='utf-8') as f:
-    for line in f:
-        data_list.append(json.loads(line))
+def save_to_jsonl(data, file_path):
+    with open(file_path, 'w', encoding='utf-8') as file:
+        for item in data:
+            file.write(json.dumps(item, ensure_ascii=False) + '\n')
 
-combined_data = combine_questions(data_list)
+instruction = "제시된 각 질문에 대해 상세하고 명확한 설명을 제공하시오."
+train_data = load_train_data(train_file_path)
+formatted_data = format_data_with_instruction(train_data, instruction)
+combined_data = combine_questions(formatted_data, instruction)
+augmented_data = formatted_data + combined_data
 
 new_file_path = '../datas/combined_train_data_with_original.jsonl'
-with open(new_file_path, 'w', encoding='utf-8') as new_file:
-    for item in combined_data:
-        new_file.write(json.dumps(item, ensure_ascii=False) + '\n')
+save_to_jsonl(data=augmented_data, file_path=new_file_path)
