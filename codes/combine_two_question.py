@@ -66,7 +66,14 @@ def save_to_jsonl(data, file_path):
         for item in data:
             file.write(json.dumps(item, ensure_ascii=False) + '\n')
 
-instruction = "제시된 질문의 주제와 관련하여, 구체적인 상황이나 개념을 설명하고 해당 질문에 대한 명확하고 상세한 답변을 제공하십시오. 건축구조, 마감재, 시공 방법, 인테리어 디자인, 하자 관련 문제 해결 등 다양한 분야에 걸친 질문에 대응할 수 있도록 주의 깊게 답변을 구성해 주십시오."
+instruction = "여러 질문이 제시되면, \
+    각각에 대해 구체적으로 답변해야 합니다. \
+    학습 데이터에서 빈번히 사용되는 용어와 문장 구조를 활용하여, \
+    건축구조, 마감재, 시공 방법, 인테리어 디자인, \
+    하자 문제 해결 등에 대한 질문에 전문적이고 상세한 답변을 제공하십시오. \
+    제시된 모든 질문에 대해 답변하며, \
+    각 답변은 해당 질문의 맥락에 맞게 독립적으로 구성되어야 합니다."
+
 train_data = load_train_data(train_file_path)
 augmented_data = format_and_combine_data(train_data, instruction)
 
