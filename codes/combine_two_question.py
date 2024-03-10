@@ -3,7 +3,7 @@ import json
 import pandas as pd
 
 # 가정: train_file_path 변수에 유효한 파일 경로가 설정되어 있음
-train_file_path = '../datas/train_processed.csv'
+train_file_path = '../datas/augment_train_processed.csv'
 
 def load_train_data(file_path):
     return pd.read_csv(file_path)
@@ -66,18 +66,12 @@ def save_to_jsonl(data, file_path):
         for item in data:
             file.write(json.dumps(item, ensure_ascii=False) + '\n')
 
-instruction = "여러 질문이 제시되면, \
-    각각에 대해 구체적으로 답변해야 합니다. \
-    학습 데이터에서 빈번히 사용되는 용어와 문장 구조를 활용하여, \
-    건축구조, 마감재, 시공 방법, 인테리어 디자인, \
-    하자 문제 해결 등에 대한 질문에 전문적이고 상세한 답변을 제공하십시오. \
-    제시된 모든 질문에 대해 답변하며, \
-    각 답변은 해당 질문의 맥락에 맞게 독립적으로 구성되어야 합니다."
+instruction = "제시된 각 질문에 대해 상세하고 명확한 설명을 제공하시오."
 
 train_data = load_train_data(train_file_path)
 augmented_data = format_and_combine_data(train_data, instruction)
 
-new_file_path = '../datas/new_sampling_train_data_with_new_instruction.jsonl'
+new_file_path = '../datas/aug_noise_train.jsonl'
 save_to_jsonl(augmented_data, new_file_path)
 
 # Return success message for user confirmation
